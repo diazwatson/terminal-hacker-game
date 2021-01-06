@@ -4,17 +4,17 @@ using System.Linq;
 public class Hacker : MonoBehaviour
 {
     // Game configuration data
-    const string menuHint = "You may type `menu` at any time.";
-    const string menuHintSp = "Escribe `menu` para volver al menú.";
-    string[] level1Passwords = {"book", "pen", "shelve", "student", "notebook"};
-    string[] level2Passwords = {"police", "station", "alarm", "thief", "gun"};
-    string[] level3Passwords = {"government", "intelligence", "agency", "terrorism", "conspiracy"};
-    string[] level1PasswordsSp = {"libro", "lapiz", "estante", "estudiante", "cuaderno"};
-    string[] level2PasswordsSp = {"policia", "estacion", "alarma", "ladron", "pistola"};
-    string[] level3PasswordsSp = {"gobierno", "inteligencia", "agencia", "terrorismo", "conspiracion"};
+    const string MenuHint = "You may type `menu` at any time.";
+    const string MenuHintSp = "Escribe `menu` para volver al menú.";
+    readonly string[] _level1Passwords = {"book", "pen", "shelve", "student", "notebook"};
+    readonly string[] _level2Passwords = {"police", "station", "alarm", "thief", "gun"};
+    readonly string[] _level3Passwords = {"government", "intelligence", "agency", "terrorism", "conspiracy"};
+    readonly string[] _level1PasswordsSp = {"libro", "lapiz", "estante", "estudiante", "cuaderno"};
+    readonly string[] _level2PasswordsSp = {"policia", "estacion", "alarma", "ladron", "pistola"};
+    readonly string[] _level3PasswordsSp = {"gobierno", "inteligencia", "agencia", "terrorismo", "conspiracion"};
 
-    int level;
-    string language;
+    int _level;
+    string _language;
 
     enum Screen
     {
@@ -25,8 +25,8 @@ public class Hacker : MonoBehaviour
         Win
     };
 
-    Screen currentScreen;
-    string password;
+    Screen _currentScreen;
+    string _password;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +36,7 @@ public class Hacker : MonoBehaviour
 
     void ShowWelcomeScreen()
     {
-        currentScreen = Screen.Welcome;
+        _currentScreen = Screen.Welcome;
         Terminal.ClearScreen();
         Terminal.WriteLine(@"
           ._________________.
@@ -58,7 +58,7 @@ public class Hacker : MonoBehaviour
 
     void ShowLanguageMenu()
     {
-        currentScreen = Screen.Language;
+        _currentScreen = Screen.Language;
         Terminal.ClearScreen();
 
         Terminal.WriteLine("Select your language:");
@@ -67,11 +67,11 @@ public class Hacker : MonoBehaviour
         Terminal.WriteLine("Presione 2 para Español");
     }
 
-    void ShowMainMenu(string greeting = null)
+    void ShowMainMenu()
     {
-        currentScreen = Screen.MainMenu;
+        _currentScreen = Screen.MainMenu;
         Terminal.ClearScreen();
-        if (language == "en")
+        if (_language == "en")
         {
             Terminal.WriteLine("What would you like to hack into?");
             Terminal.WriteLine("");
@@ -81,7 +81,7 @@ public class Hacker : MonoBehaviour
             Terminal.WriteLine("");
             Terminal.WriteLine("Enter your selection: ");
         }
-        else if (language == "es")
+        else if (_language == "es")
         {
             Terminal.WriteLine("Que te gustaria hackear?");
             Terminal.WriteLine("");
@@ -95,28 +95,28 @@ public class Hacker : MonoBehaviour
 
     void OnUserInput(string input)
     {
-        if (input == "start" && currentScreen == Screen.Welcome)
+        if (input == "start" && _currentScreen == Screen.Welcome)
         {
             ShowLanguageMenu();
         }
-        else if (currentScreen == Screen.Language)
+        else if (_currentScreen == Screen.Language)
         {
             if (input == "1")
             {
-                language = "en";
+                _language = "en";
                 ShowMainMenu();
             }
             else if (input == "2")
             {
-                language = "es";
+                _language = "es";
                 ShowMainMenu();
             }
         }
-        else if (currentScreen == Screen.MainMenu)
+        else if (_currentScreen == Screen.MainMenu)
         {
             RunMainMenu(input);
         }
-        else if (currentScreen == Screen.Password)
+        else if (_currentScreen == Screen.Password)
         {
             CheckPassword(input);
         }
@@ -129,12 +129,12 @@ public class Hacker : MonoBehaviour
         if (input == "quit" || input == "exit" || input == "close" || input == "salir" || input == "quitar")
         {
             Terminal.ClearScreen();
-            if (language == "en")
+            if (_language == "en")
             {
                 Terminal.WriteLine("Terminal session ended");
                 Terminal.WriteLine("Close this tab to finish.");
             }
-            else if (language == "es")
+            else if (_language == "es")
             {
                 Terminal.WriteLine("Finalizada la sesión de terminal");
                 Terminal.WriteLine("Cierre esta pestaña para terminar.");
@@ -145,7 +145,7 @@ public class Hacker : MonoBehaviour
 
     void CheckPassword(string input)
     {
-        if (input == password)
+        if (input == _password)
         {
             DisplayWinScreen();
         }
@@ -158,20 +158,20 @@ public class Hacker : MonoBehaviour
 
     void DisplayWinScreen()
     {
-        currentScreen = Screen.Win;
+        _currentScreen = Screen.Win;
         Terminal.ClearScreen();
         ShowLevelReward();
     }
 
     void ShowLevelReward()
     {
-        if (language == "en")
+        if (_language == "en")
         {
-            switch (level)
+            switch (_level)
             {
                 case 1:
                     Terminal.WriteLine("Congratulations, you have unlocked");
-                    Terminal.WriteLine("a secret book!");
+                    Terminal.WriteLine("a Secret Book!");
                     Terminal.WriteLine(@"
       ______ ______
     _/      Y      \_
@@ -183,7 +183,7 @@ public class Hacker : MonoBehaviour
                     break;
                 case 2:
                     Terminal.WriteLine(@"
-Congratulations, you win!
+Special Gun Unlocked, You Win!
  +--^-----,-------,----,--------^-,
  | |||||   `------'     |         O
  `+---------------------^---------|
@@ -196,7 +196,7 @@ Congratulations, you win!
                     break;
                 case 3:
                     Terminal.WriteLine(@"
-Congratulations, you win!
+Unlocked Secret Files, You Win!
  ___,___,____,____ 
 |  ...|//./|'|    \ 
 |  ...|/.///||     |
@@ -213,11 +213,11 @@ Congratulations, you win!
                     break;
             }
 
-            Terminal.WriteLine(menuHint);
+            Terminal.WriteLine(MenuHint);
         }
-        else if (language == "es")
+        else if (_language == "es")
         {
-            switch (level)
+            switch (_level)
             {
                 case 1:
                     Terminal.WriteLine("Desbloqueado un libro secreto!");
@@ -245,7 +245,7 @@ Super arma, desbloqueada!
                     break;
                 case 3:
                     Terminal.WriteLine(@"
-Desbloqueado archivos secretos!
+Desbloqueado Archivos Secretos!
  ___,___,____,____ 
 |  ...|//./|'|    \ 
 |  ...|/.///||     |
@@ -262,7 +262,7 @@ Desbloqueado archivos secretos!
                     break;
             }
 
-            Terminal.WriteLine(menuHintSp);
+            Terminal.WriteLine(MenuHintSp);
         }
     }
 
@@ -270,11 +270,11 @@ Desbloqueado archivos secretos!
     {
         string[] swering = {"fuck", "shit", "ssshole", "dick", "bitch", "twat"};
 
-        bool isValidLevelNumber = (input == "1" || input == "2" || input == "3" && currentScreen == Screen.MainMenu);
+        bool isValidLevelNumber = (input == "1" || input == "2" || input == "3" && _currentScreen == Screen.MainMenu);
 
         if (isValidLevelNumber)
         {
-            level = int.Parse(input);
+            _level = int.Parse(input);
             AskForPassword();
         }
         else if (swering.Contains(input))
@@ -294,56 +294,56 @@ Desbloqueado archivos secretos!
 
     void AskForPassword()
     {
-        currentScreen = Screen.Password;
+        _currentScreen = Screen.Password;
         Terminal.ClearScreen();
         SetRandomPassword();
-        if (language == "en")
+        if (_language == "en")
         {
-            Terminal.WriteLine("Enter your password, hint: " + password.Anagram());
-            Terminal.WriteLine(menuHint);
+            Terminal.WriteLine("Enter your password, hint: " + _password.Anagram());
+            Terminal.WriteLine(MenuHint);
         }
-        else if (language == "es")
+        else if (_language == "es")
         {
-            Terminal.WriteLine("Decifra la contraseña: " + "(" + password.Anagram() + ")");
+            Terminal.WriteLine("Decifra la contraseña: " + "(" + _password.Anagram() + ")");
             Terminal.WriteLine("");
             Terminal.WriteLine("");
             Terminal.WriteLine("");
-            Terminal.WriteLine(menuHintSp);
+            Terminal.WriteLine(MenuHintSp);
         }
     }
 
     void SetRandomPassword()
     {
-        if (language == "en")
+        if (_language == "en")
         {
-            switch (level)
+            switch (_level)
             {
                 case 1:
-                    password = level1Passwords[Random.Range(0, level1Passwords.Length)];
+                    _password = _level1Passwords[Random.Range(0, _level1Passwords.Length)];
                     break;
                 case 2:
-                    password = level2Passwords[Random.Range(0, level2Passwords.Length)];
+                    _password = _level2Passwords[Random.Range(0, _level2Passwords.Length)];
                     break;
                 case 3:
-                    password = level3Passwords[Random.Range(0, level3Passwords.Length)];
+                    _password = _level3Passwords[Random.Range(0, _level3Passwords.Length)];
                     break;
                 default:
                     Debug.LogError("Invalid level number.");
                     break;
             }
         }
-        else if (language == "es")
+        else if (_language == "es")
         {
-            switch (level)
+            switch (_level)
             {
                 case 1:
-                    password = level1PasswordsSp[Random.Range(0, level1PasswordsSp.Length)];
+                    _password = _level1PasswordsSp[Random.Range(0, _level1PasswordsSp.Length)];
                     break;
                 case 2:
-                    password = level2PasswordsSp[Random.Range(0, level2PasswordsSp.Length)];
+                    _password = _level2PasswordsSp[Random.Range(0, _level2PasswordsSp.Length)];
                     break;
                 case 3:
-                    password = level3PasswordsSp[Random.Range(0, level3PasswordsSp.Length)];
+                    _password = _level3PasswordsSp[Random.Range(0, _level3PasswordsSp.Length)];
                     break;
                 default:
                     Debug.LogError("Nivel Inválido.");
